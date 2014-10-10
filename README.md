@@ -1,5 +1,7 @@
-# feedlyBot
-`hubot feed`でfeedlyから未読フィードを取ってきてhubotがしゃべるよ( ⁰⊖⁰)
+# feedly-hubot
+
+* cronで2分に一回未読フィードを垂れ流し
+* `hubot feed`でfeedlyから未読フィードを取ってきてhubotがしゃべるよ( ⁰⊖⁰)
 
 ## 準備
 1. feedly_access_token.txtという名前のファイルにfeedlyのアクセストークンを保存(r,wの権限が必要)
