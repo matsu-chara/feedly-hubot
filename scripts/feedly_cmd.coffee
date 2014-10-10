@@ -148,7 +148,7 @@ class Entry
       return "#{@sourceName} #{@title} #{@url}"
 
 module.exports = (robot) ->
-  robot.respond /f$/i, (msg) ->
+  robot.respond /feed$/i, (msg) ->
     isTwitter = true
     f = new Feedly './feedly_access_token.txt'
 
