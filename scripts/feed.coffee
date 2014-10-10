@@ -147,43 +147,51 @@ class Entry
     else
       return "#{@sourceName} #{@title} #{@url}"
 
+processTask = (robot, envelope) ->
+  isTwitter = if process.env.HUBOT_TWITTER_KEY then true else false
+  f = new Feedly './feedly_access_token.txt'
+
+  async () ->
+    feeds = await f.fetchFeeds()
+
+    unreadFeedIds =
+      _.chain(feeds)
+        .filter((f) -> f.count isnt 0)
+        .map((f) -> f.id)
+        .value()
+
+    unreadEntries =
+      await _.map(unreadFeedIds, (id) -> f.fetchUnreadEntries id)
+
+    # 既読にしたくないエントリーを除外
+    markAsReadEntries =
+      _.chain(unreadEntries)
+        .flatten()
+        .reject((entry) -> _.str.endsWith(entry.category, '-no-bot'))
+        .value()
+
+    # メッセージを送信したくないエントリーを除外
+    # 重複メッセージを避けるため既読にしないエントリーはメッセージも送信しない
+    sendEntries =
+      _.reject(
+        markAsReadEntries
+        (entry) -> _.str.include(entry.url, '//twitter.com/')
+      )
+
+    messages =
+      await _.map(sendEntries, (e) -> e.makeFeedText(isTwitter))
+
+    await _.map(messages, (m)-> robot.send(envelope, m))
+    await f.markAsRead _.map(markAsReadEntries, (e)-> (e.id))
+
+    await f.refreshFeedlyToken()
+  .call()
+
 module.exports = (robot) ->
+  new cronJob('*/1 * * * *', () ->
+    processTask(robot, { room: process.env.HUBOT_ROOM_NAME })
+  )
+  .start()
+
   robot.respond /feed$/i, (msg) ->
-    isTwitter = if process.env.HUBOT_TWITTER_KEY then true else false
-    f = new Feedly './feedly_access_token.txt'
-
-    async () ->
-      feeds = await f.fetchFeeds()
-
-      unreadFeedIds =
-        _.chain(feeds)
-          .filter((f) -> f.count isnt 0)
-          .map((f) -> f.id)
-          .value()
-
-      unreadEntries =
-        await _.map(unreadFeedIds, (id) -> f.fetchUnreadEntries id)
-
-      # 既読にしたくないエントリーを除外
-      markAsReadEntries =
-        _.chain(unreadEntries)
-          .flatten()
-          .reject((entry) -> _.str.endsWith(entry.category, '-no-bot'))
-          .value()
-
-      # メッセージを送信したくないエントリーを除外
-      # 重複メッセージを避けるため既読にしないエントリーはメッセージも送信しない
-      sendEntries =
-        _.reject(
-          markAsReadEntries
-          (entry) -> _.str.include(entry.url, '//twitter.com/')
-        )
-
-      messages =
-        await _.map(sendEntries, (e) -> e.makeFeedText(isTwitter))
-
-      await _.map(messages, (m)-> msg.send m)
-      await f.markAsRead _.map(markAsReadEntries, (e)-> (e.id))
-
-      await f.refreshFeedlyToken()
-    .call()
+    processTask(robot, msg.envelope.room)

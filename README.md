@@ -8,6 +8,7 @@
 ```sh
 # hubot
 export HUBOT_NAME=""
+export HUBOT_CHANNEL_NAME=""
 
 # feedly
 export FEEDLY_REFRESH_TOKEN=""
@@ -30,3 +31,5 @@ export FEEDLY_CLIENT_SECRET=""
 # expoert HUBOT_SLACK_TEAM=""
 # expoert HUBOT_SLACK_BOTNAME="$HUBOT_NAME"
 ```
+
+1. bin/hubot -a <adopter>で受付開始
