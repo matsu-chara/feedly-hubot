@@ -149,7 +149,7 @@ class Entry
 
 module.exports = (robot) ->
   robot.respond /feed$/i, (msg) ->
-    isTwitter = true
+    isTwitter = if process.env.HUBOT_TWITTER_KEY then true else false
     f = new Feedly './feedly_access_token.txt'
 
     async () ->
