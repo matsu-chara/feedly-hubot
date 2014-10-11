@@ -4,8 +4,10 @@
 * `hubot feed`でfeedlyから未読フィードを取ってきてhubotがしゃべるよ( ⁰⊖⁰)
 
 ## 準備
-1. feedly_access_token.txtという名前のファイルにfeedlyのアクセストークンを保存(r,wの権限が必要)
-1. 以下の環境変数を保存
+
+* feedly_access_token.txtという名前のファイルにfeedlyのアクセストークンを保存(r,wの権限が必要)
+
+* 以下の環境変数を保存
 
 ```sh
 # feedly
@@ -35,4 +37,4 @@ export FEEDLY_CLIENT_SECRET=""
 # expoert HUBOT_SLACK_BOTNAME="$HUBOT_NAME"
 ```
 
-1. bin/hubot -a {adopter name}で受付開始
+* bin/hubot -a {adopter name}で受付開始
