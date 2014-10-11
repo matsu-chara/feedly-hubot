@@ -35,4 +35,4 @@ export FEEDLY_CLIENT_SECRET=""
 # expoert HUBOT_SLACK_BOTNAME="$HUBOT_NAME"
 ```
 
-1. bin/hubot -a <adopter>で受付開始
+1. bin/hubot -a {adopter name}で受付開始
