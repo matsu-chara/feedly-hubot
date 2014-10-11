@@ -194,4 +194,4 @@ module.exports = (robot) ->
   .start()
 
   robot.respond /feed$/i, (msg) ->
-    processTask(robot, msg.envelope.room)
+    processTask(robot, { room: msg.envelope.room })
