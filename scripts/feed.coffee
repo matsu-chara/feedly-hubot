@@ -188,7 +188,7 @@ processTask = (robot, envelope) ->
   .call()
 
 module.exports = (robot) ->
-  new cronJob('*/1 * * * *', () ->
+  new cronJob('*/2 * * * *', () ->
     processTask(robot, { room: process.env.HUBOT_ROOM_NAME })
   )
   .start()
